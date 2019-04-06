@@ -35,7 +35,7 @@ public class Solution1 {
 			count++;
 			while (matcher.find()) {
 				allIndexes.add(l - matcher.start() - 1);
-			}
+			} 
 			for (Integer index : allIndexes) {
 				f = (int) (f + (Math.pow(10, index)));
 			}
