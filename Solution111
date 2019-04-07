@@ -1,0 +1,160 @@
+package com.itcinfotech.zicos.pipeline.model;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+
+public class Solution111 {
+
+	static Long lastDivisor = null;
+
+	public static void main(String[] args) {
+
+		Map<Long, String> decoder = new TreeMap<>();
+
+		Scanner in = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
+		int totalCases = in.nextInt();
+
+		List<Long> highestOdds = new ArrayList<>();
+		List<Long> textLengths = new ArrayList<>();
+		List<String> secondLines = new ArrayList<>();
+		
+		for (int i = 0; i < totalCases; i++) {
+			highestOdds.add(in.nextLong());
+			textLengths.add(in.nextLong());
+			for(int j = 0 ; j < textLengths.get(textLengths.size()-1); j++){
+				secondLines.add(in.next());
+			}
+		}
+		
+		for (int i = 0; i < totalCases; i++) {
+			lastDivisor = null;
+			long highestOdd = highestOdds.get(i);
+			long textLength = textLengths.get(i);
+//			int textLength = 0;
+			Set<Long> all = new TreeSet<>();
+			List<SecureText> allTexts = new ArrayList<>();
+//			highestOdd = in.nextInt();
+//			textLength = in.nextInt();
+
+			for (int j = 0; j < textLength; j++) {
+				SecureText st = new SecureText();
+				long xx = Long.parseLong(secondLines.get(i));
+				// System.out.println(xx);
+				long largestDivisor = largestDivisor(xx);
+				long otherDivisor = xx / largestDivisor;
+				all.add(largestDivisor);
+				if (otherDivisor != 1)
+					all.add(otherDivisor);
+				 System.out.println(largestDivisor + " " + otherDivisor);
+				st.setLargestDivisor(largestDivisor);
+				st.setOtherDivisor(otherDivisor);
+				allTexts.add(st);
+
+			}
+
+			int t = 65;
+			for (Long x : all) {
+				// if(x%2!=0)
+				decoder.put(x, String.valueOf((char) t));
+				t++;
+			}
+			
+			 for (Long long1 : decoder.keySet()) { 
+				 System.out.println(long1 + " " + decoder.get(long1)); 
+			 }
+			
+			String decode = "";
+			for (int j = 0; j < textLength - 1; ++j) {
+				decode = decode + decode(decoder, allTexts.get(j), allTexts.get(j + 1));
+			}
+			decode = decode + decode(decoder, allTexts.get(allTexts.size() - 1), allTexts.get(allTexts.size() - 1));
+//			decode = decode + decodeLast(decoder, allTexts.get(allTexts.size() - 1), allTexts.get(allTexts.size() - 1));
+			System.out.println(decode);
+		}
+
+	}
+
+	private static String decode(Map<Long, String> decoder, SecureText t1, SecureText t11) {
+		if (lastDivisor == null) {
+			if (t1.getLargestDivisor() == t11.getLargestDivisor()) {
+				lastDivisor = t1.getOtherDivisor();
+				return decoder.get(t1.getOtherDivisor());
+			} else {
+				lastDivisor = t1.getLargestDivisor();
+				return decoder.get(t1.getLargestDivisor());
+			} /*else {
+				lastDivisor = t1.getLargestDivisor();
+				return decoder.get(t1.getLargestDivisor());
+			}*/
+		} else {
+			if (t1.getLargestDivisor() == lastDivisor) {
+				lastDivisor = t1.getOtherDivisor();
+				return decoder.get(t1.getOtherDivisor());
+			} else {
+				lastDivisor = t1.getLargestDivisor();
+				return decoder.get(t1.getLargestDivisor());
+			}
+		}
+	}
+
+	/*private static String decodeLast(Map<Long, String> decoder, SecureText t1, SecureText t11) {
+		if (t1.getLargestDivisor() == t11.getLargestDivisor()) {
+			return decoder.get(t11.getLargestDivisor());
+		} else if (t1.getOtherDivisor() == t11.getOtherDivisor()) {
+			return decoder.get(t11.getOtherDivisor());
+		} else {
+			return decoder.get(t11.getOtherDivisor());
+		}
+	}
+*/
+	public static long largestDivisor(long n) {
+		final long sqrtn = (long) Math.sqrt(n);
+		for (long i = 3; i <= n / 2; i += 2) {
+			if ((n % i == 0)) {
+				// System.out.println("i="+i);
+				// System.out.println("largestDivisor for n="+n +" is=" + ( ((n / i)==2)? (i):(n/ i) ));
+				return ((n / i) == 2) ? i : (n / i);
+			}
+		}
+		// System.out.println("largestDivisor for n="+n +" is=" + n);
+		return n;
+	}
+}
+
+class SecureText {
+	long secureText;
+	long largestDivisor;
+	long otherDivisor;
+
+	public long getSecureText() {
+		return secureText;
+	}
+
+	public void setSecureText(long secureText) {
+		this.secureText = secureText;
+	}
+
+	public long getLargestDivisor() {
+		return largestDivisor;
+	}
+
+	public void setLargestDivisor(long largestDivisor) {
+		this.largestDivisor = largestDivisor;
+	}
+
+	public long getOtherDivisor() {
+		return otherDivisor;
+	}
+
+	public void setOtherDivisor(long otherDivisor) {
+		this.otherDivisor = otherDivisor;
+	}
+
+}
