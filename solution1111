@@ -1,0 +1,100 @@
+package theksoni.google.code.jam;
+
+import java.awt.Point;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Set;
+
+
+public class Solution {
+
+	public static void main(String[] args) {
+		Scanner in = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
+		Long totalCases = in.nextLong(); // Scanner has functions to read ints, longs, strings, chars, etc.
+		List<String> out = new ArrayList<>();
+		for (Long i = 1l; i <= totalCases; ++i) {
+//			solveCase(in, i);
+			out.add(solveCase(in, i));
+		}
+		
+		for (String o : out) {
+			System.out.println(o);
+		}
+	}
+
+	public static String solveCase(Scanner in, Long caseNumber) {
+		Long totalInsts  = in.nextLong(); 
+		Integer totalRows  = in.nextInt(); 
+		Integer totalColumns  = in.nextInt(); 
+		
+		Integer startRow  = in.nextInt(); 
+		Integer startColumn  = in.nextInt(); 
+		
+		String insts = in.next();
+		Set<Point> travled = new HashSet<>();
+		Point currentLocation = new Point(startColumn, startRow);
+		travled.add(currentLocation);
+		char[] charArray = insts.toCharArray();
+//		for (char i : insts.toCharArray()) {
+		for (int j = 0; j < totalInsts; j++) {
+			switch (charArray[j]) {
+			case 'N':
+				moveSouth(currentLocation, travled);
+				break;
+			case 'S':
+				moveNorth(currentLocation, travled);
+				break;
+			case 'E':
+				moveEast(currentLocation, travled);
+				break;
+			case 'W':
+				moveWest(currentLocation, travled);
+				break;
+			}
+		}
+		return "Case #"+caseNumber+ ": "+ (int)currentLocation.getY() +" "+(int)currentLocation.getX();
+	}
+
+
+	public static void moveNorth(Point currentLocation, Set<Point> travled) {
+		currentLocation.setLocation(currentLocation.getX(), currentLocation.getY()+1);
+		if (travled.contains(currentLocation)) {
+			moveNorth(currentLocation, travled);
+		} else {
+			travled.add(currentLocation);
+		}
+	}
+
+	public static void moveSouth(Point currentLocation, Set<Point> travled) {
+		currentLocation.setLocation(currentLocation.getX(), currentLocation.getY()-1);
+		if (travled.contains(currentLocation)) {
+			moveSouth(currentLocation, travled);
+		} else {
+			travled.add(currentLocation);
+		}
+
+	}
+
+	public static void moveEast(Point currentLocation, Set<Point> travled) {
+		currentLocation.setLocation(currentLocation.getX()+1, currentLocation.getY());
+		if (travled.contains(currentLocation)) {
+			moveEast(currentLocation, travled);
+		} else {
+			travled.add(currentLocation);
+		}
+	}
+
+	public static void moveWest(Point currentLocation, Set<Point> travled) {
+		currentLocation.setLocation(currentLocation.getX()-1, currentLocation.getY());
+		if (travled.contains(currentLocation)) {
+			moveWest(currentLocation, travled);
+		} else {
+			travled.add(currentLocation);
+		}
+	}
+
+}
